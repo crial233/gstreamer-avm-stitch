@@ -96,13 +96,55 @@ nvavmstitch name=stitch \
   output-width=800 output-height=900 fit-mode=contain
 ```
 
-四个摄像头分支分别连接：
+## `/dev/video*` 与 `stitch.sink_*` 的区别
+
+这两组名称处于管线的不同位置，不能互相替代：
+
+- `/dev/video0`～`/dev/video3` 是 Linux 创建的摄像头设备节点，供
+  `nvv4l2camerasrc device=...` 打开摄像头。
+- `stitch.sink_front`、`stitch.sink_left`、`stitch.sink_right` 和
+  `stitch.sink_bottom` 是 `nvavmstitch` 元素的四个输入 Pad，用来告诉插件
+  当前图像属于车辆的哪个方向。
+
+一条完整分支同时包含设备节点和方位 Pad。例如：
 
 ```text
-... ! nvvidconv bl-output=false ! queue ! stitch.sink_front
-... ! nvvidconv bl-output=false ! queue ! stitch.sink_left
-... ! nvvidconv bl-output=false ! queue ! stitch.sink_right
-... ! nvvidconv bl-output=false ! queue ! stitch.sink_bottom
+nvv4l2camerasrc device=/dev/video0
+  → NV12/NVMM 格式转换
+  → stitch.sink_front
+```
+
+含义是“从 `/dev/video0` 采集图像，并把这路图像作为前摄像头送进 AVM
+插件”。如果现场摄像头连接关系如下，则映射为：
+
+| 摄像头设备 | 实际安装方向 | AVM 输入 Pad |
+| --- | --- | --- |
+| `/dev/video0` | 前 | `stitch.sink_front` |
+| `/dev/video1` | 左 | `stitch.sink_left` |
+| `/dev/video2` | 右 | `stitch.sink_right` |
+| `/dev/video3` | 后 | `stitch.sink_bottom` |
+
+`sink_bottom` 是插件早期开发时保留的历史名称，在当前四路 AVM 标定中代表
+后摄像头，并不是车底摄像头。
+
+上表只是示例，不表示 `/dev/video0` 永远是前摄像头。设备号由 Linux 枚举
+产生，可能因接线、采集卡端口或启动顺序发生变化。部署前先查看设备：
+
+```bash
+v4l2-ctl --list-devices
+```
+
+然后逐路单独显示或推流，确认每个设备的实际方向。确认后再建立
+`/dev/video*` 到 `stitch.sink_*` 的连接。方向接错会造成鸟瞰图旋转、错位、
+重叠区域不匹配或明显拼接缝，修改标定文件无法补偿错误的输入顺序。
+
+按照上表示例，四个完整输入分支为：
+
+```text
+/dev/video0 → nvv4l2camerasrc → nvvidconv bl-output=false → queue → stitch.sink_front
+/dev/video1 → nvv4l2camerasrc → nvvidconv bl-output=false → queue → stitch.sink_left
+/dev/video2 → nvv4l2camerasrc → nvvidconv bl-output=false → queue → stitch.sink_right
+/dev/video3 → nvv4l2camerasrc → nvvidconv bl-output=false → queue → stitch.sink_bottom
 ```
 
 每个分支都必须输出 1920×1080 NV12/NVMM，并建议使用
