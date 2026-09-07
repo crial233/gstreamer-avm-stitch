@@ -88,13 +88,85 @@ gst-inspect-1.0 nvavmstitch
 
 ## 使用要点
 
-创建元素时指定标定资产：
+## 完整四路 AVM 推流示例
+
+以下示例假设现场摄像头方向为：
+
+```text
+/dev/video0 = 前摄像头
+/dev/video1 = 左摄像头
+/dev/video2 = 右摄像头
+/dev/video3 = 后摄像头
+```
+
+四路摄像头经过格式转换后送入 `nvavmstitch`，拼接结果编码为 H.265，最后
+通过 RTP/UDP 发送到 `10.108.189.158:5000`：
+
+```bash
+gst-launch-1.0 -e -v \
+  nvavmstitch name=stitch \
+    asset-file=/opt/calibration/avm_zhuangzaiji2_quick.bin \
+    output-width=800 \
+    output-height=900 \
+    fit-mode=contain \
+  ! queue max-size-buffers=4 leaky=downstream \
+  ! nvv4l2h265enc \
+      control-rate=1 \
+      iframeinterval=30 \
+      idrinterval=30 \
+      maxperf-enable=1 \
+      insert-sps-pps=true \
+      bitrate=8000000 \
+  ! rtph265pay pt=96 mtu=1200 config-interval=1 \
+  ! udpsink host=10.108.189.158 port=5000 sync=false async=false \
+  \
+  nvv4l2camerasrc device=/dev/video0 do-timestamp=true \
+  ! 'video/x-raw(memory:NVMM),width=1920,height=1080,format=YUY2,framerate=30/1' \
+  ! nvvidconv bl-output=false \
+  ! 'video/x-raw(memory:NVMM),width=1920,height=1080,format=NV12,framerate=30/1' \
+  ! queue \
+  ! stitch.sink_front \
+  \
+  nvv4l2camerasrc device=/dev/video1 do-timestamp=true \
+  ! 'video/x-raw(memory:NVMM),width=1920,height=1080,format=YUY2,framerate=30/1' \
+  ! nvvidconv bl-output=false \
+  ! 'video/x-raw(memory:NVMM),width=1920,height=1080,format=NV12,framerate=30/1' \
+  ! queue \
+  ! stitch.sink_left \
+  \
+  nvv4l2camerasrc device=/dev/video2 do-timestamp=true \
+  ! 'video/x-raw(memory:NVMM),width=1920,height=1080,format=YUY2,framerate=30/1' \
+  ! nvvidconv bl-output=false \
+  ! 'video/x-raw(memory:NVMM),width=1920,height=1080,format=NV12,framerate=30/1' \
+  ! queue \
+  ! stitch.sink_right \
+  \
+  nvv4l2camerasrc device=/dev/video3 do-timestamp=true \
+  ! 'video/x-raw(memory:NVMM),width=1920,height=1080,format=YUY2,framerate=30/1' \
+  ! nvvidconv bl-output=false \
+  ! 'video/x-raw(memory:NVMM),width=1920,height=1080,format=NV12,framerate=30/1' \
+  ! queue \
+  ! stitch.sink_bottom
+```
+
+运行前需要按照实际接线修改四个 `/dev/video*` 与前、左、右、后的对应关系，
+并根据接收端修改 `host` 和 `port`。如果摄像头实际输出不是 30 FPS，也要同步
+修改每路 `framerate` 以及编码器的 `iframeinterval`、`idrinterval`。
+
+### AVM 元素参数
+
+完整管线中的 AVM 元素为：
 
 ```text
 nvavmstitch name=stitch \
   asset-file=/opt/calibration/avm_zhuangzaiji2_quick.bin \
   output-width=800 output-height=900 fit-mode=contain
 ```
+
+- `name=stitch`：为元素命名，四路输入通过 `stitch.sink_*` 与它连接。
+- `asset-file`：解压后的 AVMAP v1 标定资产路径。
+- `output-width`、`output-height`：输出鸟瞰图尺寸；当前示例为 800×900。
+- `fit-mode=contain`：保持画面比例，必要时留边，避免非等比拉伸。
 
 ## `/dev/video*` 与 `stitch.sink_*` 的区别
 
