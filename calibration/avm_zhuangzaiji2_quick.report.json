@@ -1,0 +1,237 @@
+{
+  "asset": {
+    "magic": "AVMAP01",
+    "version": 1,
+    "source_size": [
+      1920,
+      1080
+    ],
+    "canvas_size": [
+      1600,
+      1800
+    ],
+    "camera_count": 4,
+    "flags": 1,
+    "pixel_count": 2880000,
+    "file_size": 149760080
+  },
+  "output": "C:\\C++ project\\gstreamer_undistort\\calibration\\avm_zhuangzaiji2_quick.bin",
+  "output_sha256": "5a44c45c21b498f6a05dc569d8c3d235f5400dbb92680960026fda3f719b8765",
+  "fmap": {
+    "path": "C:\\C++ project\\gstreamer_undistort\\undistort_map.bin",
+    "sha256": "7724452d61a6f3b23eb1fbeb530bf0fd1939f7adb547d3e4ea285971ed8a97d2",
+    "size": [
+      1920,
+      1080
+    ],
+    "opencv_reference_max_error_px": 6.103515625e-05,
+    "opencv_reference_rms_error_px": 5.99421809965861e-08
+  },
+  "calibration": {
+    "model": "opencv_fisheye_4_parameter",
+    "K": [
+      [
+        516.8013980933,
+        0.0,
+        959.9479673357
+      ],
+      [
+        0.0,
+        517.0228242052,
+        542.0684276335
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "D": [
+      0.25,
+      -0.0025,
+      -0.0025,
+      0.002
+    ],
+    "Knew": [
+      [
+        455.175203582352,
+        0.0,
+        960.0
+      ],
+      [
+        0.0,
+        455.175203582352,
+        540.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "shared_by_four_avm_cameras": true
+  },
+  "homography_fit": {
+    "front": {
+      "point_count": 8,
+      "mean_px": 12.178401424650048,
+      "max_px": 17.139092571170607,
+      "p95_px": 16.32301470843514,
+      "homography_corrected_to_bev": [
+        [
+          -0.8628327665571698,
+          -1.2666016111195664,
+          1359.7668959379141
+        ],
+        [
+          -0.0827760195147096,
+          -1.8189374337921558,
+          1268.6821201335936
+        ],
+        [
+          -8.534666000568054e-05,
+          -0.002102572998201932,
+          1.0
+        ]
+      ]
+    },
+    "left": {
+      "point_count": 8,
+      "mean_px": 29.39227663718914,
+      "max_px": 34.27347673698016,
+      "p95_px": 34.25921566643727,
+      "homography_corrected_to_bev": [
+        [
+          -1.0964363471378917,
+          32.154386893739996,
+          -13173.160999492779
+        ],
+        [
+          -18.872195815020856,
+          21.01037643970996,
+          18671.517164444667
+        ],
+        [
+          -0.0008636801415809254,
+          0.02933306475977068,
+          1.0
+        ]
+      ]
+    },
+    "right": {
+      "point_count": 8,
+      "mean_px": 28.161275666129363,
+      "max_px": 34.84326755356804,
+      "p95_px": 34.25742090263411,
+      "homography_corrected_to_bev": [
+        [
+          -0.4710886028215065,
+          -1.1754204416765959,
+          -2542.1766940011685
+        ],
+        [
+          -4.524322786612035,
+          -4.9803542485949315,
+          4666.5050221343145
+        ],
+        [
+          -0.0006182818179555284,
+          -0.007003665736854008,
+          1.0
+        ]
+      ]
+    },
+    "back": {
+      "point_count": 8,
+      "mean_px": 11.439760287339784,
+      "max_px": 14.727791927127965,
+      "p95_px": 14.532895997071257,
+      "homography_corrected_to_bev": [
+        [
+          2.1853358678637638,
+          -2.930147480057827,
+          -1589.6510694401816
+        ],
+        [
+          -0.12336890616212212,
+          -1.9146066682818448,
+          -963.9936465398723
+        ],
+        [
+          -0.0002520975952359446,
+          -0.0046352793743511846,
+          1.0
+        ]
+      ]
+    },
+    "bottom": {
+      "point_count": 26,
+      "mean_px": 13.961104828752749,
+      "max_px": 25.316622392648373,
+      "p95_px": 25.0271198452262,
+      "homography_corrected_to_bev": [
+        [
+          2.370277135044753,
+          -3.777954872210715,
+          -1817.6834953262064
+        ],
+        [
+          -0.28069662828728303,
+          -4.567371281529808,
+          -853.0103312058333
+        ],
+        [
+          -0.0002778350261632879,
+          -0.006439482839181035,
+          1.0
+        ]
+      ]
+    }
+  },
+  "valid_pixels": {
+    "front": 887177,
+    "left": 1385493,
+    "right": 1332499,
+    "bottom": 485646
+  },
+  "weight_sum": {
+    "nonzero_pixels": 2880000,
+    "max_normalization_error": 1.1920928955078125e-07
+  },
+  "overlay_enabled": true,
+  "overlay_nonzero_alpha_pixels": 225910,
+  "baseline": {
+    "path": "C:\\C++ project\\gstreamer_undistort\\calibration\\avm_zhuangzaiji2.bin",
+    "sha256": "a037b9aced5c31376d3ba7ebd81c18de724159e942850dc50ba7adb760d537f7",
+    "map_shift": {
+      "front": {
+        "common_valid_pixels": 877396,
+        "mean_source_shift_px": 11.842504501342773,
+        "median_source_shift_px": 8.500078201293945,
+        "p95_source_shift_px": 33.61857223510742,
+        "max_source_shift_px": 53.05047607421875
+      },
+      "left": {
+        "common_valid_pixels": 1298616,
+        "mean_source_shift_px": 25.645524978637695,
+        "median_source_shift_px": 20.27094268798828,
+        "p95_source_shift_px": 65.78437042236328,
+        "max_source_shift_px": 93.34205627441406
+      },
+      "right": {
+        "common_valid_pixels": 1253083,
+        "mean_source_shift_px": 25.090656280517578,
+        "median_source_shift_px": 19.770692825317383,
+        "p95_source_shift_px": 64.95071411132812,
+        "max_source_shift_px": 88.90985107421875
+      },
+      "bottom": {
+        "common_valid_pixels": 485646,
+        "mean_source_shift_px": 23.30642318725586,
+        "median_source_shift_px": 17.615345001220703,
+        "p95_source_shift_px": 62.89786911010742,
+        "max_source_shift_px": 85.4197769165039
+      }
+    }
+  }
+}

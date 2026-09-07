@@ -1,0 +1,22 @@
+build/
+build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.o
+*.so
+*.log
+*.tmp
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+.vs/
+Thumbs.db
+.DS_Store
+
+# 仓库只提交打包后的标定文件，排除工作目录中尚未清理的副本
+calibration/*.bin
+calibration/*.rar
+calibration/undistort_map.bin
